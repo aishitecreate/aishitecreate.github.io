@@ -1,4 +1,5 @@
 # Disable all themes
+encoding: "utf-8"
 theme: ""
 
 # Tell Jekyll not to wrap things in HTML layouts
