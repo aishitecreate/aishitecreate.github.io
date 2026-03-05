@@ -4,37 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pobfus 0.7 | Beta</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --accent: #58a6ff;
+            --neon: #7ee787;
+        }
+        body {
+            background: var(--bg);
+            color: #c9d1d9;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--panel);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        h1 { color: var(--accent); text-align: center; letter-spacing: 3px; }
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: #010409;
+            color: var(--neon);
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { opacity: 0.8; transform: scale(1.01); }
+        .logo-pre {
+            font-size: 8px;
+            line-height: 8px;
+            color: var(--accent);
+            text-align: center;
+            white-space: pre;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="glass-panel">
-        <header>
-            <h1 class="glow-text">POBFUS <span>0.7</span></h1>
-            <p class="status">SYSTEM STATUS: <span class="online">OPERATIONAL</span></p>
-        </header>
-
-        <div class="editor-section">
-            <div class="box">
-                <label>INPUT LUA</label>
-                <textarea id="inputCode" placeholder="-- Paste your raw script here..."></textarea>
-            </div>
-            
-            <div class="box">
-                <label>PROTECTED OUTPUT</label>
-                <textarea id="outputCode" readonly placeholder="-- Obfuscated code will appear here..."></textarea>
-            </div>
-        </div>
-
-        <div class="actions">
-            <button onclick="pobfusStart()" class="btn-primary">OBFUSCATE & VIRTUALIZE</button>
-            <button onclick="copyToClipboard()" class="btn-secondary">COPY RESULT</button>
-        </div>
+    <div class="container">
+        <h1>POBFUS 0.7</h1>
+        <div class="logo-pre" id="logoDisplay"></div>
         
-        <footer>
-            <p>Pobfus Security 2026 | Non-Root Optimized</p>
-        </footer>
+        <label>INPUT LUA SOURCE:</label>
+        <textarea id="inputCode" placeholder="print('Hello World')"></textarea>
+        
+        <button onclick="pobfusStart()">PROTECT & VIRTUALIZE</button>
+        
+        <label style="margin-top: 20px; display: block;">OBFUSCATED OUTPUT:</label>
+        <textarea id="outputCode" readonly></textarea>
     </div>
 
+    <script>
+        const ASCII_LOGO = String.raw`
+ /$$$$$$$           /$$        /$$$$$$                    
+| $$__  $$         | $$       /$$__  $$                   
+| $$  \ $$ /$$$$$$ | $$$$$$$ | $$  \__//$$   /$$  /$$$$$$$
+| $$$$$$$//$$__  $$| $$__  $$| $$$$   | $$  | $$ /$$_____/
+| $$____/| $$  \ $$| $$  \ $$| $$_/   | $$  | $$|  $$$$$$ 
+| $$     | $$  | $$| $$  | $$| $$     | $$  | $$ \____  $$
+| $$     |  $$$$$$/| $$$$$$$/| $$     |  $$$$$$/ /$$$$$$$/
+|__/      \______/ |_______/ |__/      \______/ |_______/ `;
+
+        document.getElementById('logoDisplay').innerText = ASCII_LOGO;
+
+        function pobfusStart() {
+            const input = document.getElementById('inputCode').value;
+            if (!input) return alert("Input required!");
+
+            // XOR VM Logic
+            const key = Math.floor(Math.random() * 255);
+            const bytes = input.split('').map(c => c.charCodeAt(0) ^ key);
+
+            const vm = `--[[
+${ASCII_LOGO}
+    [ VERSION: 0.7 BETA ]
+--]]
+local _d = {${bytes.join(',')}}
+local _k = ${key}
+local _s = ""
+for i=1, #_d do _s = _s .. string.char(_d[i] ~ _k) end
+local _r = loadstring or load
+_r(_s)()`;
+
+            document.getElementById('outputCode').value = vm;
+        }
+    </script>
+</body>
+</html>
     <script src="script.js"></script>
 </body>
     </html>
