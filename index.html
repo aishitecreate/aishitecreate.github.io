@@ -3,133 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tenringsofdoom1x / Pobfus-1.0</title>
+    <title>Pobfus-1.0.6 // tenringsofdoom1x</title>
     <style>
-        :root {
-            --bg: #0d1117; --subtle: #161b22; --border: #30363d;
-            --text: #c9d1d9; --accent: #58a6ff; --green: #238636;
-        }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        .header { width: 100%; background: var(--subtle); padding: 15px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; box-sizing: border-box; }
-        .status { background: rgba(56, 139, 253, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-        .container { width: 90%; max-width: 900px; margin: 30px; border: 1px solid var(--border); border-radius: 6px; background: var(--subtle); overflow: hidden; }
-        .logo-box { padding: 20px; background: #010409; font-family: monospace; font-size: 8px; color: var(--accent); white-space: pre; text-align: center; border-bottom: 1px solid var(--border); }
-        textarea { width: 100%; height: 200px; background: #010409; color: #7ee787; border: 1px solid var(--border); padding: 10px; font-family: monospace; font-size: 12px; box-sizing: border-box; resize: vertical; outline: none; }
-        .controls { padding: 15px; display: flex; gap: 10px; }
-        .btn { padding: 8px 18px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border); background: #21262d; color: white; font-weight: 600; }
-        .btn-primary { background: var(--green); border: none; }
-        #toast { position: fixed; top: 20px; right: 20px; background: #21262d; border: 1px solid #f85149; color: #f85149; padding: 12px; display: none; border-radius: 6px; z-index: 999; }
+        :root { --bg: #0d1117; --sub: #161b22; --brd: #30363d; --txt: #c9d1d9; --acc: #58a6ff; --grn: #238636; }
+        body { background: var(--bg); color: var(--txt); font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .header { width: 100%; background: var(--sub); padding: 10px 20px; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        .badge { background: rgba(35, 134, 54, 0.1); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.3); padding: 2px 8px; border-radius: 4px; font-size: 10px; letter-spacing: 1px; }
+        .container { width: 95%; max-width: 900px; margin-top: 30px; border: 1px solid var(--brd); background: var(--sub); border-radius: 4px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .logo-box { padding: 15px; background: #010409; font-size: 8px; color: var(--acc); white-space: pre; text-align: center; border-bottom: 1px solid var(--brd); overflow-x: auto; }
+        .editor { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        textarea { width: 100%; height: 200px; background: #010409; color: #8b949e; border: 1px solid var(--brd); padding: 10px; font-size: 12px; box-sizing: border-box; resize: none; outline: none; transition: 0.2s; }
+        textarea:focus { border-color: var(--acc); color: #fff; }
+        .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn { padding: 8px 16px; border-radius: 3px; cursor: pointer; border: 1px solid var(--brd); background: #21262d; color: #c9d1d9; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .btn:hover { background: #30363d; border-color: #8b949e; }
+        .btn-prim { background: var(--grn); color: white; border: none; }
+        .btn-prim:disabled { opacity: 0.5; cursor: wait; }
+        #toast { position: fixed; top: 20px; background: var(--acc); color: #000; padding: 5px 15px; border-radius: 2px; display: none; font-weight: bold; z-index: 99; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<div id="toast"></div>
+<div id="toast">SYSTEM_ONLINE</div>
 
 <div class="header">
-    <span style="font-weight: 600;">tenringsofdoom1x / Pobfus-1.0</span>
-    <span class="status">v1.0 STABLE</span>
+    <div style="font-weight: bold; font-size: 14px; letter-spacing: 2px;">POBFUS_v1.0.6</div>
+    <div class="badge">STABLE_BUILD</div>
 </div>
 
 <div class="container">
     <div class="logo-box" id="logo"></div>
-    <div style="padding: 20px;">
-        <textarea id="input" placeholder="-- Paste Lua Source Here"></textarea>
+    <div class="editor">
+        <textarea id="in" placeholder="-- [ INPUT_BUFFER ] --&#10;Paste source here..."></textarea>
+        
         <div class="controls">
-            <button class="btn btn-primary" onclick="runObfuscation()">Protect Script</button>
-            <button class="btn" onclick="copy()">Copy Result</button>
+            <button class="btn btn-prim" id="go" onclick="run()">PROTECT_SOURCE</button>
+            <button class="btn" onclick="test()">LOAD_SAMPLE</button>
+            <button class="btn" onclick="copy()">COPY_HEX</button>
+            <button class="btn" id="dl" style="display:none" onclick="save()">DOWNLOAD_.LUA</button>
         </div>
-        <textarea id="output" readonly placeholder="The 'Fat Wall' will appear here..."></textarea>
+
+        <textarea id="out" readonly placeholder="-- [ OUTPUT_BRICK_WALL ] --&#10;Encrypted payload will appear here..."></textarea>
     </div>
 </div>
 
-<script>
-    // 1. THE SYNCED SOURCE
-    const LOGO = `ooooooooo.              .o8        .o88o.                      
-\`888   \`Y88.           "888        888 \`"                      
- 888   .d88'  .ooooo.   888oooo.  o888oo  oooo  oooo   .oooo.o 
- 888ooo88P'  d88' \`88b  d88' \`88b  888    \`888  \`888  d88(  "8 
- 888         888   888  888   888  888     888   888  \`"Y88b.  
- 888         888   888  888   888  888     888   888  o.  )88b 
-o888o        \`Y8bod8P'  \`Y8bod8P' o888o    \`V88V"V8P' 8""888P'
-          [ POBFUS 1.0 | CAMBUSCATE 0.1.1 ]`;
-
-    document.getElementById('logo').innerText = LOGO;
-
-    function notify(m) {
-        const t = document.getElementById('toast');
-        t.innerText = "⚠️ " + m; t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
-    }
-
-    // 2. THE INTERNAL ENGINE
-    async function runObfuscation() {
-        const code = document.getElementById('input').value;
-        if (!code) return notify("No Input Detected.");
-
-        const sig = LOGO.length % 255;
-        const seed = 0x6C;
-        const key = seed ^ sig;
-
-        // Encrypting Input into the "Fat" Table
-        const bytes = code.split('').map(c => {
-            const h = (c.charCodeAt(0) ^ key).toString(16).toUpperCase().padStart(2, '0');
-            return "0x" + h + Math.random().toString(36).substring(2, 5);
-        });
-
-        // Encrypting a Roast
-        const roast = "Nice try skid, tenringsofdoom1x owns you.".split('').map(c => 
-            "0x" + (c.charCodeAt(0) ^ key).toString(16).toUpperCase().padStart(2, '0')
-        ).join(',');
-
-        let wall = "";
-        for (let i = 0; i < bytes.length; i++) {
-            wall += bytes[i] + (i === bytes.length - 1 ? "" : ", ");
-            if ((i + 1) % 8 === 0) wall += "\n    ";
-        }
-
-        // 3. GENERATING THE OUTPUT (With your Fat Header names)
-        const result = `--[[
-${LOGO}
-]]
-local Eb,ob,La,e_,Za,bb=type,bit32.bxor,getmetatable,pairs,nil,nil
-local G,lb,Yb,L,Zc,gc,Dc,K,Nc,x,Xa,ea,h,zc,Pc,Hc,O,Ka,E,F,_c,ec,ab,Bc,Ub,Ua,qb,sa,fb,Sa,nc,ca,rb,nb,jb,fa_,vc,Ya,zb,a_
-
-gc,Sa,L = (string.char),(string.byte),(bit32.bxor);
-local _D = {
-    ${wall}
-}
-local _T = {${roast}}
-
-local _VM = function(_o, _k)
-    local _r, _s = "", 100
-    repeat
-        if _s == 100 then
-            for _, _v in pairs(_o) do
-                local _hex = tostring(_v):sub(1,4)
-                _r = _r .. gc(L(tonumber(_hex, 16), _k))
-            end
-            _s = 0
-        end
-    until _s == 0
-    return _r
-end
-
-local _R = function()
-    local _k = ${seed} ~ (#debug.getinfo(1).source % 255)
-    local _ok, _res = pcall(function() return (loadstring or load)(_VM(_D, _k)) end)
-    if _ok and _res then pcall(_res) else print(_VM(_T, _k)) while true do end end
-end
-_R()`;
-
-        document.getElementById('output').value = result;
-    }
-
-    function copy() {
-        const o = document.getElementById('output');
-        o.select(); document.execCommand('copy');
-        alert("Fat Build Copied!");
-    }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
