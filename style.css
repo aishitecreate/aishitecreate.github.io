@@ -1,40 +1,114 @@
+/* GitHub "Dark Mode" Theme Core */
 :root {
-    --bg-color: #0a0b0d;
-    --panel-color: #161b22;
-    --accent-color: #58a6ff;
-    --neon-green: #7ee787;
-    --neon-red: #ff7b72;
+    --color-canvas-default: #0d1117;
+    --color-canvas-subtle: #161b22;
+    --color-border-default: #30363d;
+    --color-fg-default: #c9d1d9;
+    --color-fg-muted: #8b949e;
+    --color-accent-fg: #58a6ff;
+    --color-btn-bg: #21262d;
+    --color-btn-hover-bg: #30363d;
+    --color-btn-primary-bg: #238636;
+    --color-btn-primary-hover-bg: #2ea043;
+    --color-danger-fg: #f85149;
 }
 
 body {
-    background-color: var(--bg-color);
-    color: #c9d1d9;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-canvas-default);
+    color: var(--color-fg-default);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    margin: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
 }
 
-.glass-panel {
-    background: rgba(22, 27, 34, 0.8);
-    backdrop-filter: blur(10px);
-    border: 1px solid #30363d;
-    padding: 30px;
-    border-radius: 15px;
+/* Fix: Ensures the logo doesn't warp and break the character count math */
+.logo-box {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 8px;
+    line-height: 1.1;
+    color: var(--color-accent-fg);
+    white-space: pre !important; /* Critical: Prevents spaces from collapsing */
+    display: block;
+    padding: 20px;
+    background: #010409;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.container {
     width: 90%;
     max-width: 1000px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin: 40px auto;
+    padding: 24px;
+    background-color: var(--color-canvas-subtle);
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    box-sizing: border-box;
 }
 
-.glow-text {
-    text-align: center;
-    letter-spacing: 5px;
-    color: var(--accent-color);
-    text-shadow: 0 0 10px rgba(88, 166, 255, 0.5);
+textarea {
+    width: 100%;
+    height: 250px;
+    background-color: #010409;
+    color: #7ee787;
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    padding: 12px;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 12px;
+    resize: vertical;
+    margin: 10px 0;
+    box-sizing: border-box;
 }
 
+.controls {
+    display: flex;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.btn {
+    position: relative;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    color: var(--color-fg-default);
+    background-color: var(--color-btn-bg);
+    transition: background 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--color-btn-primary-bg);
+    color: white;
+    border: 1px solid rgba(240,246,252,0.1);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* Error Toast Visuals */
+#errorToast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    background: #21262d;
+    border: 1px solid var(--color-danger-fg);
+    border-left: 5px solid var(--color-danger-fg);
+    color: var(--color-fg-default);
+    border-radius: 6px;
+    display: none;
+    z-index: 10000;
+    }
 .glow-text span { color: white; }
 
 .status { text-align: center; font-size: 12px; margin-bottom: 20px; }
