@@ -3,165 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pobfus 0.8 | Using CamBuscate Priv</title>
+    <title>tenringsofdoom1x / Pobfus-0.8</title>
     <style>
+        /* GitHub Dark Theme Palette */
         :root {
-            --bg: #0d1117;
-            --panel: #161b22;
-            --accent: #58a6ff;
-            --neon: #7ee787;
+            --color-canvas-default: #0d1117;
+            --color-canvas-subtle: #161b22;
+            --color-border-default: #30363d;
+            --color-fg-default: #c9d1d9;
+            --color-fg-muted: #8b949e;
+            --color-accent-fg: #58a6ff;
+            --color-btn-bg: #21262d;
+            --color-btn-hover-bg: #30363d;
+            --color-btn-primary-bg: #238636;
+            --color-btn-primary-hover-bg: #2ea043;
         }
+
         body {
-            background: var(--bg);
-            color: #c9d1d9;
-            font-family: 'Courier New', monospace;
+            background-color: var(--color-canvas-default);
+            color: var(--color-fg-default);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
             display: flex;
-            justify-content: center;
-            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-user-select: none;
+            user-select: none;
         }
-        .container {
+
+        /* Top Header Navigation Mockup */
+        .header {
             width: 100%;
-            max-width: 900px;
-            background: var(--panel);
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #30363d;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            background-color: var(--color-canvas-subtle);
+            padding: 16px;
+            border-bottom: 1px solid var(--color-border-default);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
         }
-        h1 { color: var(--accent); text-align: center; letter-spacing: 3px; }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin-top: 40px;
+            border: 1px solid var(--color-border-default);
+            border-radius: 6px;
+            background-color: var(--color-canvas-subtle);
+            overflow: hidden;
+        }
+
+        .repo-header {
+            padding: 16px;
+            background-color: var(--color-canvas-default);
+            border-bottom: 1px solid var(--color-border-default);
+        }
+
+        .logo-box {
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+            font-size: 8px;
+            line-height: 1.2;
+            color: var(--color-accent-fg);
+            white-space: pre;
+            padding: 20px;
+            background: #010409;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .editor-section {
+            padding: 16px;
+        }
+
         textarea {
             width: 100%;
-            height: 200px;
-            background: #010409;
-            color: var(--neon);
-            border: 1px solid #30363d;
+            height: 220px;
+            background-color: #010409;
+            color: #7ee787;
+            border: 1px solid var(--color-border-default);
             border-radius: 6px;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 12px;
+            font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 13px;
+            resize: vertical;
+            outline: none;
             box-sizing: border-box;
+            user-select: text;
         }
-        button {
-            width: 100%;
-            padding: 15px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
+
+        textarea:focus {
+            border-color: var(--color-accent-fg);
+            box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
+        }
+
+        /* GitHub Style Buttons */
+        .btn {
+            display: inline-block;
+            padding: 5px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
             cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover { opacity: 0.8; transform: scale(1.01); }
-        .logo-pre {
-            font-size: 8px;
-            line-height: 8px;
-            color: var(--accent);
+            border: 1px solid rgba(240,246,252,0.1);
+            border-radius: 6px;
+            transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
+            color: var(--color-fg-default);
+            background-color: var(--color-btn-bg);
             text-align: center;
-            white-space: pre;
-            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            background-color: var(--color-btn-hover-bg);
+            border-color: #8b949e;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: var(--color-btn-primary-bg);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-btn-primary-hover-bg);
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--color-fg-muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .branch-label {
+            background-color: #1f6feb26;
+            color: var(--color-accent-fg);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>POBFUS 0.7</h1>
-        <div class="logo-pre" id="logoDisplay"></div>
-        
-        <label>INPUT LUA SOURCE:</label>
-        <textarea id="inputCode" placeholder="print('Hello World')"></textarea>
-        
-        <button onclick="pobfusStart()">PROTECT & VIRTUALIZE</button>
 
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-    <button onclick="copyToClipboard()" style="background: #238636;">COPY CODE</button>
-    <button onclick="downloadFile()" style="background: #8957e5;">DOWNLOAD .LUA</button>
-</div>
-
-<div id="toast" style="display:none; position:fixed; bottom:20px; right:20px; background: #58a6ff; color:white; padding:10px 20px; border-radius:5px; font-weight:bold;">Copied!</div>
-        
-        <label style="margin-top: 20px; display: block;">OBFUSCATED OUTPUT:</label>
-        <textarea id="outputCode" readonly></textarea>
+    <div class="header">
+        <svg height="32" viewBox="0 0 16 16" width="32" style="fill:white;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        <span>tenringsofdoom1x / Pobfus-0.8</span>
+        <span class="branch-label">beta</span>
     </div>
+
+    <div class="container">
+        <div class="repo-header">
+            <div class="logo-box" id="logoDisplay"></div>
+        </div>
+        
+        <div class="editor-section">
+            <label style="color: var(--color-fg-muted); font-size: 12px;">MAIN SOURCE</label>
+            <textarea id="inputCode" placeholder="-- Input Lua code to virtualize..."></textarea>
+            
+            <div class="controls">
+                <button class="btn btn-primary" onclick="pobfusStart()">Protect Code</button>
+                <button class="btn" onclick="copyToClipboard()">Copy</button>
+                <button class="btn" onclick="downloadFile()">Download</button>
+            </div>
+
+            <label style="color: var(--color-fg-muted); font-size: 12px; margin-top: 20px; display: block;">VIRTUALIZED OUTPUT</label>
+            <textarea id="outputCode" readonly placeholder="-- Protected code will appear here..."></textarea>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 tenringsofdoom1x. Powered by CamBuscate Virtualization Technology.
+    </footer>
 
     <script>
         const ASCII_LOGO = String.raw`
- /$$$$$$$           /$$        /$$$$$$                    
-| $$__  $$         | $$       /$$__  $$                   
-| $$  \ $$ /$$$$$$ | $$$$$$$ | $$  \__//$$   /$$  /$$$$$$$
-| $$$$$$$//$$__  $$| $$__  $$| $$$$   | $$  | $$ /$$_____/
-| $$____/| $$  \ $$| $$  \ $$| $$_/   | $$  | $$|  $$$$$$ 
-| $$     | $$  | $$| $$  | $$| $$     | $$  | $$ \____  $$
-| $$     |  $$$$$$/| $$$$$$$/| $$     |  $$$$$$/ /$$$$$$$/
-|__/      \______/ |_______/ |__/      \______/ |_______/ `;
+ooooooooo.              .o8        .o88o.                      
+` + "`" + `888   ` + "`" + `Y88.           "888        888 ` + "`" + `"                      
+ 888   .d88'  .ooooo.   888oooo.  o888oo  oooo  oooo   .oooo.o 
+ 888ooo88P'  d88' ` + "`" + `88b  d88' ` + "`" + `88b  888    ` + "`" + `888  ` + "`" + `888  d88(  "8 
+ 888         888   888  888   888  888     888   888  ` + "`" + `"Y88b.  
+ 888         888   888  888   888  888     888   888  o.  )88b 
+o888o        ` + "`" + `Y8bod8P'  ` + "`" + `Y8bod8P' o888o    ` + "`" + `V88V"V8P' 8""888P'`;
 
-        document.getElementById('logoDisplay').innerText = ASCII_LOGO;
+        const VERSION_TAG = "\n          [ ENGINE: CAMBUSCATE 0.1 | V0.8 BETA ]";
+        document.getElementById('logoDisplay').innerText = ASCII_LOGO + VERSION_TAG;
+
+        function generateId(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
 
         function pobfusStart() {
-    const input = document.getElementById('inputCode').value;
-    if (!input) return alert("Input required!");
+            const input = document.getElementById('inputCode').value;
+            if (!input) return;
 
-    // 1. Key Generation & Bytecode Scrambling
-    const key = Math.floor(Math.random() * 255) + 1;
-    const bytes = input.split('').map(c => c.charCodeAt(0) ^ key);
-    
-    // 2. Junk Logic Generator (Makes it look complex)
-    const junk = () => {
-        const lines = [
-            `local _0x${Math.random().toString(36).substring(7)} = (66 * 2) / 4`,
-            `if (not _G) then return end`,
-            `local _0xEnv = getfenv and getfenv() or _G`,
-            `for i=1,10 do end`
-        ];
-        return lines[Math.floor(Math.random() * lines.length)];
-    };
+            const logoSig = (ASCII_LOGO + VERSION_TAG).length % 255;
+            const seed = 0x4B; 
+            const finalKey = seed ^ logoSig;
 
-    // 3. The "Heavy" VM Wrapper
-    const vm = `--[[
+            const bytes = input.split('').map(c => c.charCodeAt(0) ^ finalKey);
+            const vmName = "_0x" + Math.random().toString(36).substring(7);
+
+            const vm = `--[[
 ${ASCII_LOGO}
-    [ VERSION: 0.7 I-VIRTUobfuscator ]
---]]
-local _Pobfus_VM = function()
-    local _stack = {${bytes.join(',')}}
-    local _key = ${key}
-    local _output = ""
-    ${junk()}
-    
-    -- Virtualized Execution Loop
-    local _exec = function(data, k)
-        local res = ""
-        for i=1, #data do
-            ${junk()}
-            local char = data[i]
-            res = res .. string.char(char ~ k)
-            if i % 5 == 0 then ${junk()} end
-        end
-        return res
-    end
-
-    local _runtime = _exec(_stack, _key)
-    ${junk()}
-    local _caller = loadstring or load
-    local _fn, _err = _caller(_runtime)
-    
-    if not _fn then 
-        warn("[POBFUS] Execution Error: " .. tostring(_err))
-        return 
-    end
-    
-    return _fn()
+${VERSION_TAG}
+]]
+local ${vmName} = function()
+    local _d = {${bytes.join(',')}}
+    local _s = #debug.getinfo(1).source % 255
+    local _k = ${seed} ~ _s
+    local _r = ""
+    for i=1, #_d do _r = _r .. string.char(_d[i] ~ _k) end
+    local _f = loadstring or load
+    local _ok, _res = pcall(_f(_r))
+    if not _ok then warn("POBFUS: Integrity Fail") while true do end end
 end
+pcall(${vmName})`;
 
--- Anti-Dump Execution
-${junk()}
-pcall(_Pobfus_VM)
-`;
-
-    document.getElementById('outputCode').value = vm;
-}
+            document.getElementById('outputCode').value = vm;
         }
+
+        function copyToClipboard() {
+            const el = document.getElementById('outputCode');
+            navigator.clipboard.writeText(el.value);
+            alert("Copied to clipboard.");
+        }
+
+        function downloadFile() {
+            const val = document.getElementById('outputCode').value;
+            if(!val) return;
+            const uniqueId = generateId(16);
+            const blob = new Blob([val], {type: 'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `pobfus-${uniqueId}.lua`;
+            a.click();
+        }
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
 </html>
-    <script src="script.js"></script>
-</body>
-    </html>
