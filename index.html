@@ -71,6 +71,13 @@
         <textarea id="inputCode" placeholder="print('Hello World')"></textarea>
         
         <button onclick="pobfusStart()">PROTECT & VIRTUALIZE</button>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+    <button onclick="copyToClipboard()" style="background: #238636;">COPY CODE</button>
+    <button onclick="downloadFile()" style="background: #8957e5;">DOWNLOAD .LUA</button>
+</div>
+
+<div id="toast" style="display:none; position:fixed; bottom:20px; right:20px; background: #58a6ff; color:white; padding:10px 20px; border-radius:5px; font-weight:bold;">Copied!</div>
         
         <label style="margin-top: 20px; display: block;">OBFUSCATED OUTPUT:</label>
         <textarea id="outputCode" readonly></textarea>
