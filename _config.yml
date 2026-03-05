@@ -1,13 +1,42 @@
-# Disable all themes
-encoding: "utf-8"
-theme: ""
+name: Pobfus 0.7 Hybrid Deploy
 
-# Tell Jekyll not to wrap things in HTML layouts
-layout: none
+on:
+  push:
+    branches: [ "main" ]
 
-# Basic Metadata
-title: Raw Index
-description: Plain text repository
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
-# Ensure all file types are accessible
-include: [".htaccess", "README.md", ".txt"]
+jobs:
+  # JOB 1: Check the Python Reader (The "Slow" tool you kept)
+  python-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Syntax Check
+        run: |
+          # This checks for errors without fully running the "slow" script
+          python -m py_compile main_obf.py 
+
+  # JOB 2: Deploy the Fast JS Website
+  deploy-web:
+    runs-on: ubuntu-latest
+    needs: python-check # Only deploys if Python code isn't broken
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: '.' # Uploads index.html, style.css, script.js
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
