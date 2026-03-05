@@ -4,8 +4,7 @@
 ![Pobfus Web Interface](webpic.png)
 
 Developed by **[tenringsofdoom1x](https://github.com/tenringsofdoom1x)**, Pobfus 0.8 is a security-focused obfuscator designed to combat AI-driven de-compilation and manual script analysis.
-Status:
-[![Status](https://img.shields.io/badge/Status-Maintenance-yellow)](https://github.com/tenringsofdoom1x)
+
 ---
 
 ## 💎 Proprietary Technology: CamBuscate 0.1.1
@@ -30,3 +29,4 @@ Sincerely,
 **tenringsofdoom1x**
 
 ---
+[![Status](https://img.shields.io/badge/Status-Maintenance-yellow)](https://github.com/tenringsofdoom1x)
