@@ -1,123 +1,133 @@
 /**
- * POBFUS v1.0.61 - THE MONOLITH
- * Built for Execution Dominance
+ * POBFUS 1.11 // CORE_PROTECTOR
+ * ENGINE: CAMBUSCATE 0.2.1
+ * [!] PRODUCTION BUILD - ANTI-LEAK ENABLED
  */
 
-const LOGO_A = `
-#####  ###  ####    #   #   #  ####      #      ###     ### 
-#   # #   #  #     ###   # #  #         ##      # #     #   
-#   # #   #  #### # # #   #   #          #      # #     ### 
-#   # #   #  #  #  ###   #    #          #      # #     # # 
-#   #  ###  #####   #   #      ####     ###  #  ###  #  ### 
-          [ POBFUS 1.0.61 | MONOLITH ]`;
+(function(_0xPOBFUS) {
+    // Barcode Generator for Lua variables
+    const _0xBC = (l) => { 
+        let r = "I"; 
+        for(let i=0; i<l; i++) r += "Il".charAt(Math.floor(Math.random() * 2)); 
+        return r; 
+    };
 
-const LOGO_B = `
-MM"""""""\`YM          dP       .8888b                   dP 
-MM  mmmmm  M          88       88   "                   88 
-M'        .M .d8888b. 88d888b. 88aaa  dP    dP .d8888b. 88 
-MM  MMMMMMMM 88'  \`88 88'  \`88 88     88    88 Y8ooooo. dP 
-MM  MMMMMMMM 88.  .88 88.  .88 88     88.  .88       88    
-MM  MMMMMMMM \`88888P' 88Y8888' dP     \`88888P' \`88888P' oo 
-MMMMMMMMMMMM                                               
-          [ POBFUS 1.0.61 | MONOLITH ]`;
+    // UI String Decryption (XOR 0x6F)
+    const _0xS = (h) => h.split(',').map(b => String.fromCharCode(parseInt(b, 16) ^ 0x6F)).join('');
 
-let ACTIVE_LOGO = Math.random() > 0.5 ? LOGO_A : LOGO_B;
+    // Randomized Alphanumeric Noise
+    const _0xSCREAM = (len) => {
+        const c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let r = "";
+        for(let i=0; i<len; i++) r += c.charAt(Math.floor(Math.random() * c.length));
+        return r;
+    };
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('logo').textContent = ACTIVE_LOGO;
-});
-
-function notify(m) {
-    const t = document.getElementById('toast');
-    t.innerText = m; t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 2000);
-}
-
-function randVar() {
-    const c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let r = c.charAt(Math.floor(Math.random() * c.length));
-    for(let i=0; i<6; i++) r += c.charAt(Math.floor(Math.random() * c.length));
-    return r;
-}
-
-function generateScream(len) {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let res = "";
-    for(let i=0; i<len; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
-    return res;
-}
-
-function beautifyInput(code) {
-    return code.replace(/--.*$/gm, '').replace(/--\[\[[\s\S]*?\]\]/g, '').replace(/\n\s*\n/g, '\n').trim();
-}
-
-async function run() {
-    let src = document.getElementById('in').value;
-    const btn = document.getElementById('go');
-    const out = document.getElementById('out');
-    if (!src.trim()) return notify("ERROR: NO_INPUT");
-
-    btn.disabled = true;
-    out.value = "[!] BOOTING_VM_v1.0.61...";
-
-    const logs = [
-        "STRIPPING SOURCE COMMENTS...",
-        "MAPPING ENV_SPOOF (_genv, _renv)...",
-        "GENERATING LAG-SYNC v1-v5 BUFFERS...",
-        "FINALIZING_HEX_BRICK_WALL..."
+    // Roast Database
+    const _0xROASTS = [
+        "your decompiler likes me~ too much...",
+        "feed me to your poor decompiler senpai!!!~",
+        "staring at my bytecode again? how lewd~",
+        "is that a hook? how aggressive, senpai~",
+        "your decompiler is blushing at this complexity~"
     ];
 
-    for (let log of logs) {
-        out.value += `\n[!] ${log}`;
-        await new Promise(r => setTimeout(r, 450));
-    }
+    const _STR = {
+        logo: ` _______         __           ___                 \n|_   __ \\       [  |        .' ..]                \n  | |__) | .--.  | |.--.   _| |_  __   _   .--.   \n  |  ___// .'\`\\ \\| '/'\`\\ \\'-| |-'[  | | | ( (\`\\]  \n _| |_   | \\__. ||  \\__/ |  | |   | \\_/ |, \`'.'.  \n|_____|   '.__.'[__;.__.'  [___]  '.__.'_/([__) ) \n                                                  \n     [ Pobfus 1.11 | CamBuscate 0.2.1 ]`,
+        run: _0xS("3C,20,22,3F,26,23,2A,4F,3F,20,2D,29,3A,3A"),
+        idle: _0xS("36,2E,22,2D,2E,2C,3F,36,2E,3A,24,2A,4F,33,3E,2E,2D"),
+        work: _0xS("2E,2B,2B,20,2C,2E,3B,36,2B,26,20,28,4F,30,3E,2B,2D,3A")
+    };
 
-    try {
-        const key = (ACTIVE_LOGO.length % 255) ^ 108;
-        
-        // Screaming Slop
-        const slop = src.split('').map((c, i) => {
-            const h = (c.charCodeAt(0) ^ key).toString(16).toUpperCase().padStart(2, '0');
-            let noise = Math.random().toString(36).substring(2, 5); 
-            if (i % 3 === 0) noise += "_" + generateScream(12) + "_";
-            return "0x" + h + noise;
-        }).join(',');
+    // High-Entropy Filename Generator
+    const _0xFILE_GEN = () => {
+        const _c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        let _r = "pobfus-";
+        for(let i=0; i<30; i++) _r += _c.charAt(Math.floor(Math.random() * _c.length));
+        return _r + ".lua";
+    };
 
-        // Lag Stages
-        let lagStages = "";
-        ['v1', 'v2', 'v3', 'v4', 'v5'].forEach(s => {
-            lagStages += `local ${s} = ""; for i=1, 450 do ${s} = ${s} .. "${generateScream(4)}" end; `;
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('logo').textContent = _STR.logo;
+        document.getElementById('go').innerText = _STR.run;
+        document.getElementById('status').innerText = _STR.idle;
+    });
 
-        const v = { p: randVar(), c: randVar(), x: randVar(), d: randVar(), vm: randVar(), r: randVar(), env: randVar(), tab: randVar() };
+    window.run = async function() {
+        const _i = document.getElementById('in');
+        const _o = document.getElementById('out');
+        const _s = document.getElementById('status');
+        const _b = document.getElementById('go');
 
-        // Output Assembly
-        const final = `--[[${ACTIVE_LOGO}\n    [!] PROTECTED BY POBFUS v1.0.61\n    [!] WEBSITE: https://tenringsofdoom1x.github.io/]]\n\n${lagStages}\n\nlocal ${v.env} = { _genv = (getgenv or function() return _G end), _renv = (getrenv or function() return _G end), _fenv = getfenv };\nlocal ${v.p},${v.c},${v.x}=pairs,(${v.env}._fenv(1).string.char),(${v.env}._fenv(1).bit32.bxor);\nlocal ${v.d}={${slop}}\n\nlocal ${v.vm}=function(o,k) local r,s="",100 repeat if s==100 then for _,v in ${v.p}(o) do local h=tostring(v):sub(1,4) local b=tonumber(h,16) if b then r=r..${v.c}(${v.x}(b,k)) end end s=0 end until s==0 return r end\n\nlocal function ${v.tab}() local t = {} for i=1, 800 do t[i] = {["val"] = "${generateScream(8)}"} end end; ${v.tab}();\n\nlocal ${v.r}=function() local k=108~(#debug.getinfo(1).source%255) local ok,res=pcall(function() return (loadstring or load)(${v.vm}(${v.d},k)) end) if ok and res then pcall(res) end end; ${v.r}()`;
+        if (!_i.value.trim()) return;
 
-        out.value = final;
-        document.getElementById('dl').style.display = 'inline-block';
-        notify("MONOLITH_ACTIVE");
+        _b.disabled = true;
+        _s.innerText = _STR.work;
 
-    } catch (e) { notify("ENGINE_CRASH"); }
-    finally { btn.disabled = false; btn.innerText = "Protect Source"; }
-}
+        await new Promise(r => setTimeout(r, 1200));
 
-function copy() {
-    const o = document.getElementById('out');
-    if (!o.value) return; o.select(); document.execCommand('copy');
-    notify("HEX_COPIED");
-}
+        try {
+            const _k = Math.floor(Math.random() * 95) + 35;
+            const _raw = _i.value.split('');
+            let _stream = [];
 
-function save() {
-    const c = document.getElementById('out').value;
-    const b = new Blob([c], { type: 'text/plain' });
-    const u = URL.createObjectURL(b);
-    const a = document.createElement('a');
-    a.href = u; a.download = 'monolith_v1.0.61.lua'; a.click();
-    URL.revokeObjectURL(u); notify("DOWNLOADED");
-}
+            // Phase: Byte-Sliding & Roast Injection
+            _raw.forEach((c, idx) => {
+                _stream.push("0x" + (c.charCodeAt(0) ^ _k).toString(16).toUpperCase());
+                if (idx % 10 === 0) {
+                    const r = _0xROASTS[Math.floor(Math.random() * _0xROASTS.length)];
+                    _stream.push(`"${r}_${_0xSCREAM(5)}"`);
+                }
+            });
 
-function test() {
-    document.getElementById('in').value = "-- Pobfus v1.0.61 Monolith Test\nprint('Virtualization Successful')\nlocal val = 100\nprint('Entropy: ' .. (val * math.random()))";
-    notify("SAMPLE_LOADED");
-     }
+            // Variable Barcode Mapping
+            const _v = {
+                env: _0xBC(12),
+                out: _0xBC(10),
+                tab: _0xBC(14),
+                vm: _0xBC(16),
+                char: _0xBC(11),
+                xor: _0xBC(9)
+            };
+
+            // Construction: Minified Brick Output
+            let _p = `--[[${_STR.logo}\n[!] POBFUS_1.11 // CAMBUSCATE_0.2.1]] `;
+            
+            // Lag-Sync Memory Bloat
+            for(let i=1; i<=4; i++) {
+                _p += `local P_${i}="";for i=1,450 do P_${i}=P_${i}.."${_0xSCREAM(2)}" end;`;
+            }
+
+            // The Engine Core (Minified)
+            _p += `local ${_v.env}=(getfenv(0) or _G);local ${_v.out}="";local ${_v.tab}={${_stream.join(',')}};`;
+            _p += `local ${_v.char}=${_v.env}["\115\116\114\105\110\103"]["\99\104\97\114"];`;
+            _p += `local ${_v.xor}=${_v.env}["\98\105\116\51\50"]["\98\120\111\114"];`;
+            _p += `local function ${_v.vm}(d,k)for _,v in pairs(d)do if type(v)=="\110\117\109\98\101\114"then `;
+            _p += `${_v.out}=${_v.out}..${_v.char}(${_v.xor}(v,k))else local _="${_0xROASTS[Math.floor(Math.random()*_0xROASTS.length)]}" end end;`;
+            _p += `local x=(loadstring or load)(${_v.out})if x then pcall(x)else warn("\80\79\66\70\85\83\95\70\65\84\65\76") end end;`;
+            _p += `${_v.vm}(${_v.tab},${_k});`;
+
+            // Final Table Roast Termination
+            _p += `local ${_0xBC(8)}={["\82\79\65\83\84"]="${_0xROASTS[1]}",["\74\85\78\75"]="${_0xSCREAM(200)}"};`;
+
+            _o.value = _p;
+            _s.innerText = "POBFUS: COMPLETE";
+            document.getElementById('dl').style.display = 'inline-block';
+
+        } catch (e) {
+            _s.innerText = "ENGINE_FATAL";
+        } finally {
+            _b.disabled = false;
+        }
+    };
+
+    // UI Bindings
+    document.getElementById('go').onclick = window.run;
+    document.getElementById('dl').onclick = () => {
+        const _b = new Blob([document.getElementById('out').value], { type: 'text/plain' });
+        const _a = document.createElement('a');
+        _a.href = URL.createObjectURL(_b);
+        _a.download = _0xFILE_GEN();
+        _a.click();
+    };
+})(window);
