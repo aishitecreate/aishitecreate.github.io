@@ -6,161 +6,131 @@
     <title>pobfus // repository</title>
     <style>
         :root { --bg: #0a0a0a; --panel: #0d0d0d; --brd: #1a1a1a; --txt: #888; --main: #eee; --acc: #00ff88; }
-        * { box-sizing: border-box; transition: 0.1s; }
-        body { 
-            background: var(--bg); color: var(--main); 
-            font-family: "fira code", monospace; margin: 0; 
-            display: flex; height: 100vh; overflow: hidden; text-transform: lowercase;
-        }
+        * { box-sizing: border-box; font-family: "fira code", monospace; text-transform: lowercase; }
+        body { background: var(--bg); color: var(--main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        .sidebar { 
-            width: 320px; min-width: 320px; background: var(--panel); border-right: 1px solid var(--brd); 
-            padding: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 10;
-        }
-
-        .brand-row { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-        .lua-logo { width: 32px; height: 32px; fill: #000080; background: #fff; border-radius: 50%; padding: 2px; }
-        .gh-logo { width: 24px; height: 24px; fill: var(--main); opacity: 0.8; }
-
+        .sidebar { width: 320px; min-width: 320px; background: var(--panel); border-right: 1px solid var(--brd); padding: 30px; display: flex; flex-direction: column; gap: 15px; }
+        .brand-row { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
+        .lua-logo { width: 32px; height: 32px; border-radius: 50%; }
         .title { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -1px; }
-        .subtitle { font-size: 9px; color: var(--acc); letter-spacing: 1px; }
+        .v-badge { background: #1a1a1a; color: var(--acc); font-size: 8px; padding: 4px 8px; border-radius: 20px; border: 1px solid #333; width: fit-content; margin-bottom: 15px; font-weight: 700; }
 
-        .nav-group { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-        .btn { 
-            background: transparent; border: 1px solid var(--brd); color: var(--txt); 
-            padding: 12px; cursor: pointer; font-family: inherit; font-size: 11px; text-align: left;
-            border-radius: 4px; font-weight: 500;
-        }
+        .btn { background: transparent; border: 1px solid var(--brd); color: var(--txt); padding: 12px; cursor: pointer; border-radius: 4px; text-align: left; width: 100%; transition: 0.2s; }
+        .btn-run { background: #fff; color: #000; border: none; font-weight: 800; margin-top: 10px; }
         .btn:hover { border-color: var(--main); color: var(--main); background: #151515; }
-        .btn-run { background: #fff; color: #000; border: none; font-weight: 800; font-size: 12px; }
-        .btn-run:hover { background: var(--acc); transform: scale(1.02); }
 
-        .changelog { margin-top: 20px; flex-grow: 1; overflow-y: auto; border-top: 1px solid var(--brd); padding-top: 20px; }
-        .log-v { font-size: 10px; color: var(--acc); font-weight: 700; margin-bottom: 5px; display: block; }
-        .log-i { font-size: 10px; color: #444; display: block; margin-bottom: 3px; border-left: 1px solid #222; padding-left: 10px; }
+        #overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.98); z-index: 1000;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        .loader-box { width: 350px; text-align: center; }
+        .bar-bg { width: 100%; height: 1px; background: #222; margin-top: 20px; overflow: hidden; }
+        .bar-fill { width: 0%; height: 100%; background: var(--acc); transition: width 15s linear; }
+        .status { color: #fff; font-size: 11px; margin-top: 25px; height: 15px; font-weight: 300; opacity: 0.8; }
 
-        .main { flex: 1; display: flex; height: 100vh; background: var(--brd); }
+        .main { flex: 1; display: flex; background: var(--brd); }
         .editor-container { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; }
-        .editor-container:first-child { border-right: 1px solid var(--brd); }
-        
-        textarea { 
-            flex: 1; width: 100%; height: 100%; background: transparent; border: none; 
-            color: var(--main); padding: 30px; resize: none; outline: none; 
-            font-size: 13px; line-height: 1.6; font-family: "fira code", monospace;
-            white-space: pre; overflow: auto;
-        }
-
-        .creator-link { 
-            padding-top: 15px; text-decoration: none; border-top: 1px solid var(--brd);
-            display: flex; align-items: center; color: var(--txt); font-size: 11px;
-        }
-        .creator-link b { color: #fff; margin-left: 5px; }
-
-        #status { position: fixed; bottom: 20px; right: 20px; font-size: 10px; color: #444; pointer-events: none; }
+        textarea { flex: 1; background: transparent; border: none; color: var(--main); padding: 30px; resize: none; outline: none; font-size: 12px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="brand-row">
-            <svg class="gh-logo" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            <svg class="lua-logo" viewBox="0 0 128 128">
-                <circle cx="64" cy="64" r="60" fill="#000080"/>
-                <circle cx="84" cy="44" r="18" fill="#fff"/>
-            </svg>
-        </div>
+<div id="overlay">
+    <div class="loader-box">
+        <div class="status" id="stxt">preparing environment...</div>
+        <div class="bar-bg"><div class="bar-fill" id="lbar"></div></div>
+    </div>
+</div>
 
-        <div class="title-block">
-            <div class="title">pobfus</div>
-            <div class="subtitle">v1.11.05-40 stable</div>
-        </div>
+<div class="sidebar">
+    <div class="brand-row">
+        <img src="https://i.ibb.co/HThqqB3k/icons8-lua-logo.jpg" class="lua-logo" alt="lua">
+        <div class="title">pobfus</div>
+    </div>
+    <div class="v-badge">v1.11.06 stable</div>
+    
+    <button class="btn btn-run" id="go">execute process</button>
+    <button class="btn" id="dl">download .lua build</button>
+    <button class="btn" id="cl">purge all buffers</button>
 
-        <div class="nav-group">
-            <button class="btn btn-run" id="obfuscateBtn">execute process</button>
-            <button class="btn" id="dlBtn">download .lua build</button>
-            <button class="btn" id="clearBtn">purge buffer</button>
-        </div>
+    <div style="margin-top:auto; padding-top:15px; border-top: 1px solid var(--brd);">
+        <a href="https://tenringsofdoom1x.github.io/" style="text-decoration:none; color:var(--txt); font-size:10px;">authorized creator:<br><b style="color:#fff">tenringsofdoom1x.github.io</b></a>
+    </div>
+</div>
 
-        <div class="changelog">
-            <span class="log-v">v1.11.06 (march 11)</span>
-            <span class="log-i" style="color:var(--acc)">> schedule confirmed</span>
+<div class="main">
+    <div class="editor-container" style="border-right: 1px solid var(--brd);">
+        <textarea id="in" spellcheck="false" placeholder="-- input source"></textarea>
+    </div>
+    <div class="editor-container">
+        <textarea id="out" spellcheck="false" readonly placeholder="-- await 15s sequence"></textarea>
+    </div>
+</div>
+
+<script>
+    const iel = document.getElementById('in'), oel = document.getElementById('out');
+    const overlay = document.getElementById('overlay'), lbar = document.getElementById('lbar'), stxt = document.getElementById('stxt');
+
+    const gs = (l) => { let s = 'I'; for(let i=0; i<l; i++) s += (Math.random() > 0.5 ? 'l' : 'I'); return s; };
+    const genID = () => {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let res = '';
+        for(let i=0; i<11; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+        return res;
+    };
+
+    const phrases = [
+        "mapping virtual instructions",
+        "scanning for logical vulnerabilities",
+        "shadowing global environment",
+        "applying ghost layer encryption",
+        "injecting randomized junk layers",
+        "wrapping execution scream",
+        "finalizing distribution blob",
+        "hiding internal warnings"
+    ];
+
+    document.getElementById('go').onclick = () => {
+        if(!iel.value.trim()) return;
+        overlay.style.display = 'flex';
+        lbar.style.width = '0%';
+        setTimeout(() => lbar.style.width = '100%', 100);
+
+        let shuffled = phrases.sort(() => 0.5 - Math.random());
+        shuffled.forEach((m, i) => {
+            setTimeout(() => { stxt.innerText = m + "..."; }, i * 1800);
+        });
+
+        setTimeout(() => {
+            const k = Math.floor(Math.random() * 80) + 20;
+            const watermark = "obfuscated by pobfus // tenringsofdoom1x.github.io";
+            const protection = `local _w = "${watermark}"; if not _G.pobfus_verified then warn(_w) end; `;
             
-            <span class="log-v" style="margin-top:10px">v1.11.05-40</span>
-            <span class="log-i">> replaced copy with download</span>
-            <span class="log-i">> file_blob dispatcher active</span>
-        </div>
+            const d = (protection + iel.value).split('').map(c => "\\" + (c.charCodeAt(0) ^ k)).join('');
+            const f = gs(12);
+            
+            let b = `--[[ ${watermark} ]]\n`;
+            const junkLines = Math.floor(Math.random() * 50) + 35;
+            for(let i=0; i<junkLines; i++) b += `local ${gs(10)} = ${Math.floor(Math.random()*1000)} + ${Math.floor(Math.random()*1000)};\n`;
 
-        <a href="https://github.com/tenringsofdoom1x" class="creator-link" target="_blank">
-            @ <b>tenringsofdoom1x</b>
-        </a>
-    </div>
+            b += `local ${f} = function() local _k,_d = ${k},"${d}"; local _r = ""; for i=1,#_d do _r=_r..string.char(bit32.bxor(string.byte(string.sub(_d,i,i)),_k)) end; local _x=loadstring(_r); if _x then setfenv(_x,getfenv()); _x(); end end; ${f}();\n`;
+            
+            oel.value = b;
+            overlay.style.display = 'none';
+        }, 15000);
+    };
 
-    <div class="main">
-        <div class="editor-container"><textarea id="input" spellcheck="false" placeholder="-- source_input"></textarea></div>
-        <div class="editor-container"><textarea id="output" spellcheck="false" readonly placeholder="-- output_stream"></textarea></div>
-    </div>
+    document.getElementById('dl').onclick = () => {
+        if(!oel.value) return;
+        const blob = new Blob([oel.value], {type: "text/plain"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `pobfus-${genID()}-110.lua.txt`;
+        a.click();
+    };
 
-    <div id="status"></div>
-
-    <script>
-        const input = document.getElementById('input');
-        const output = document.getElementById('output');
-        const status = document.getElementById('status');
-
-        const setStatus = (msg) => {
-            status.innerText = `> ${msg}`;
-            setTimeout(() => status.innerText = '', 3000);
-        };
-
-        const obfuscate = () => {
-            const src = input.value.trim();
-            if(!src) return setStatus('err: empty_buffer');
-
-            setStatus('virtualizing...');
-
-            setTimeout(() => {
-                try {
-                    const minified = src.replace(/--.*$/gm, '').replace(/\s+/g, ' ').trim();
-                    const key = Math.floor(Math.random() * 50) + 20;
-                    const bytes = Array.from(minified).map(char => char.charCodeAt(0) ^ key).join(',');
-
-                    const build = `--[[ pobfus // v1.11.05-40 ]]\n` +
-                                  `local _mem = {${bytes}};\n` +
-                                  `local _k = ${key};\n` +
-                                  `task.spawn(function()\n` +
-                                  `  local _s = ""; for _,v in pairs(_mem) do _s=_s..string.char(bit32.bxor(v,_k)) end;\n` +
-                                  `  local _vm, _e = loadstring(_s); if _vm then setfenv(_vm, getfenv()); _vm(); else warn("pobfus_err: ".._e) end\n` +
-                                  `end);`;
-
-                    output.value = build;
-                    setStatus('build_complete');
-                } catch(e) {
-                    setStatus('err: build_fault');
-                }
-            }, 600);
-        };
-
-        document.getElementById('obfuscateBtn').onclick = obfuscate;
-
-        document.getElementById('dlBtn').onclick = () => {
-            if(!output.value) return setStatus('err: nothing_to_download');
-            const blob = new Blob([output.value], {type: "text/plain"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "pobfus_build.lua";
-            a.click();
-            URL.revokeObjectURL(url);
-            setStatus('file_dispatched');
-        };
-
-        document.getElementById('clearBtn').onclick = () => {
-            input.value = '';
-            output.value = '';
-            setStatus('buffer_purged');
-        };
-
-        input.oninput = () => { if(output.value) output.value = ''; };
-    </script>
+    document.getElementById('cl').onclick = () => { iel.value = ""; oel.value = ""; };
+</script>
 </body>
-                                          </html>
+</html>
