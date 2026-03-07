@@ -9,67 +9,74 @@
         * { box-sizing: border-box; font-family: -apple-system, "Fira Code", monospace; text-transform: lowercase; }
         body { background: var(--bg); color: var(--main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* Sidebar */
-        .sidebar { width: 380px; background: var(--panel); border-right: 1px solid var(--brd); padding: 30px; display: flex; flex-direction: column; gap: 15px; }
+        .sidebar { width: 380px; background: var(--panel); border-right: 1px solid var(--brd); padding: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 10; }
         .version-tag { font-size: 10px; color: #8b949e; border: 1px solid var(--brd); width: fit-content; padding: 2px 8px; border-radius: 6px; }
-        .nav-btn { background: var(--acc); color: #fff; border: 1px solid rgba(240,246,252,0.1); padding: 12px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 13px; transition: 0.2s; }
-        .nav-btn:hover { background: #2ea043; }
-        .sec-btn { background: #21262d; color: #c9d1d9; border: 1px solid var(--brd); padding: 10px; cursor: pointer; border-radius: 6px; font-size: 12px; transition: 0.2s; }
-        .sec-btn:hover { background: #30363d; }
+        .nav-btn { background: var(--acc); color: #fff; border: 1px solid rgba(240,246,252,0.1); padding: 12px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 13px; }
+        .sec-btn { background: #21262d; color: #c9d1d9; border: 1px solid var(--brd); padding: 10px; cursor: pointer; border-radius: 6px; font-size: 12px; margin-top: 5px; width: 100%; }
         
-        /* Text Content */
-        .section-title { font-size: 12px; font-weight: 600; color: #8b949e; border-bottom: 1px solid var(--brd); padding-bottom: 5px; margin-top: 10px; }
-        .log-text { font-size: 11px; color: #7d8590; line-height: 1.6; margin: 5px 0; }
-
-        /* Editors */
-        .main { flex: 1; display: flex; background: #010409; }
+        .main { flex: 1; display: flex; background: #010409; position: relative; }
         .editor-container { flex: 1; display: flex; flex-direction: column; position: relative; border-right: 1px solid var(--brd); }
-        textarea { width: 100%; height: 100%; padding: 40px; background: transparent; border: none; outline: none; font-size: 13px; line-height: 1.8; position: absolute; white-space: pre; overflow: auto; color: #c9d1d9; z-index: 2; resize: none; }
-        #out { background: #0d1117; color: #7ee787; z-index: 3; }
+        textarea { width: 100%; height: 100%; padding: 40px; background: transparent; border: none; outline: none; font-size: 13px; line-height: 1.8; color: #c9d1d9; z-index: 5; resize: none; }
+        #out { background: #0d1117; color: #7ee787; }
 
-        /* Overlay Loader */
-        #output-loader { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 100; flex-direction: column; align-items: center; justify-content: center; }
-        #gh-spinner { width: 60px; fill: var(--gh); margin-bottom: 25px; opacity: 0.8; }
-        #gh-spinner.spinning { animation: ghSpin 1s linear infinite; }
-
-        #status-log { height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden; }
-        .status-entry { font-size: 11px; color: #58a6ff; margin-top: 4px; animation: slideIn 0.2s forwards; letter-spacing: 1px; }
-        .status-entry.dim { color: #30363d; }
+        /* FIXED LOADER OVERLAY */
+        #output-loader { 
+            display: none; 
+            position: absolute; 
+            inset: 0; 
+            background: rgba(13, 17, 23, 0.98); 
+            z-index: 1000; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
         
-        .p-bar { width: 200px; height: 2px; background: #21262d; border-radius: 10px; margin-top: 25px; overflow: hidden; }
-        .p-fill { width: 0%; height: 100%; background: var(--acc); transition: 0.3s; }
+        #gh-spinner { 
+            width: 60px; 
+            fill: var(--gh); 
+            margin-bottom: 30px; 
+            will-change: transform;
+        }
+        .spinning { animation: ghSpin 1s linear infinite; }
+
+        #status-log { 
+            height: 80px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+        }
+        .status-entry { 
+            font-size: 12px; 
+            color: #58a6ff; 
+            font-weight: 500;
+            animation: slideIn 0.3s ease forwards;
+        }
+        
+        .p-bar { width: 240px; height: 2px; background: #21262d; border-radius: 10px; margin-top: 30px; overflow: hidden; }
+        .p-fill { width: 0%; height: 100%; background: var(--acc); transition: width 0.4s ease; }
 
         @keyframes ghSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="version-tag">v1.12.01-1 stable</div>
         <div style="font-size: 24px; font-weight: 600;">pobfus</div>
-        
         <button class="nav-btn" id="go">protect script</button>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="sec-btn" id="clear">clear</button>
-            <button class="sec-btn" id="dl" disabled>download</button>
-        </div>
-
-        <div class="section-title">history</div>
-        <div class="log-text">
-            originally built for simple minification, pobfus v1.12.01-1 now utilizes environment-aware virtualization to prevent string dumping.
-        </div>
-
-        <div class="section-title">updates</div>
-        <div class="log-text">
-            • premium unicode tamper<br>
-            • improved vm stack build<br>
-            • logic-gated obfuscation
+        <button class="sec-btn" id="clear">clear code</button>
+        <button class="sec-btn" id="dl" disabled style="opacity:0.5">download .lua</button>
+        
+        <div style="margin-top:20px; font-size:11px; color:#444; border-top:1px solid #30363d; padding-top:15px;">
+            premium tamper enabled:  
         </div>
     </div>
 
     <div class="main">
         <div class="editor-container">
-            <textarea id="in" spellcheck="false" placeholder="-- input lua code"></textarea>
+            <textarea id="in" spellcheck="false" placeholder="-- paste source here"></textarea>
         </div>
         <div class="editor-container">
             <div id="output-loader">
@@ -77,7 +84,7 @@
                 <div id="status-log"></div>
                 <div class="p-bar"><div class="p-fill" id="lbar"></div></div>
             </div>
-            <textarea id="out" spellcheck="false" readonly placeholder="-- protected code"></textarea>
+            <textarea id="out" spellcheck="false" readonly placeholder="-- protected output"></textarea>
         </div>
     </div>
     <script src="script.js"></script>
