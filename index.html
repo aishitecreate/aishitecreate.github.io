@@ -3,137 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pez.bf | Krovixa Protocol</title>
+    <title>krovixa / pez.bf</title>
     <style>
-        :root {
-            --neon-red: #ff003c;
-            --dark-bg: #050505;
-            --term-green: #00ff41;
-        }
-
-        body {
-            background-color: var(--dark-bg);
-            color: var(--term-green);
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 0 0 5px var(--term-green);
-        }
-
-        .container {
-            width: 95%;
-            max-width: 900px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 250px;
-            background: #000;
-            color: var(--term-green);
-            border: 1px solid #333;
-            padding: 10px;
-            font-size: 12px;
-            resize: vertical;
-            outline: none;
-            word-break: break-all;
-            white-space: pre;
-            overflow-x: auto;
-        }
-
-        #outputCode {
-            color: var(--neon-red);
-            border-color: var(--neon-red);
-            height: 350px;
-            margin-top: 15px;
-        }
-
-        .controls {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        button {
-            background: #111;
-            color: var(--term-green);
-            border: 1px solid var(--term-green);
-            padding: 10px 20px;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: var(--term-green);
-            color: #000;
-            box-shadow: 0 0 15px var(--term-green);
-        }
-
-        .btn-red {
-            border-color: var(--neon-red);
-            color: var(--neon-red);
-        }
-
-        .btn-red:hover {
-            background: var(--neon-red);
-            color: #fff;
-            box-shadow: 0 0 15px var(--neon-red);
-        }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 10px;
-            opacity: 0.5;
-        }
+        body { background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, system-ui, sans-serif; padding: 20px; margin: 0; }
+        .wrapper { max-width: 900px; margin: 0 auto; }
+        .header { border-bottom: 1px solid #30363d; padding-bottom: 12px; margin-bottom: 24px; }
+        .header h1 { font-size: 18px; font-weight: 600; margin: 0; }
+        .box { background-color: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+        textarea { width: 100%; height: 200px; background-color: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; font-family: ui-monospace, monospace; font-size: 12px; box-sizing: border-box; outline: none; }
+        .options { display: flex; gap: 20px; margin: 15px 0; font-size: 13px; }
+        .options label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        button { background-color: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .btn-green { background-color: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); }
+        button:hover { background-color: #30363d; }
+        .btn-green:hover { background-color: #2ea043; }
+        #outputCode { height: 320px; margin-top: 10px; color: #8b949e; }
+        .warning-text { color: #ff4444; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>[ PEZ.BF PROTOCOL ]</h1>
-        <p>STEROIDS ENGINE V4.0 // KROVIXA</p>
-    </div>
-
-    <div class="container">
-        <label>INPUT RAW LUAU:</label>
-        <textarea id="inputCode" placeholder="Paste your script here..."></textarea>
-
-        <div class="controls">
-            <button onclick="buildSteroids()">GENERATE PROTECTED</button>
-            <button class="btn-red" onclick="downloadScript()">DOWNLOAD .LUA</button>
-            <button onclick="document.getElementById('inputCode').value=''; document.getElementById('outputCode').value=''">CLEAR</button>
+<div class="wrapper">
+    <div class="header"><h1>krovixa / pez.bf</h1></div>
+    
+    <div class="box">
+        <textarea id="inputCode" placeholder="Paste your Luau source code here..."></textarea>
+        
+        <div class="options">
+            <label><input type="checkbox" id="chkGap" checked> 10k Scroll Gap</label>
+            <label title="Triggers Lag/Image Lock if script is renamed or edited">
+                <input type="checkbox" id="chkAlarm"> 
+                <span class="warning-text">🚨</span> Security Alarm (Armed)
+            </label>
         </div>
 
-        <label style="display:block; margin-top:20px;">PROTECTED OUTPUT (SKID-SKID EDITION):</label>
-        <textarea id="outputCode" readonly spellcheck="false"></textarea>
+        <div class="controls">
+            <button class="btn-green" onclick="buildSteroids()">Deploy Protocol</button>
+            <button onclick="downloadScript()">Download .lua</button>
+            <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
     </div>
 
-    <div class="footer">
-        UNAUTHORIZED ACCESS IS PROHIBITED. BYPASSING FILTERS... OK.
+    <div class="box">
+        <textarea id="outputCode" readonly spellcheck="false" placeholder="Protected output..."></textarea>
     </div>
+</div>
 
-    <script src="script.js"></script>
-    <script>
-        function downloadScript() {
-            const code = document.getElementById('outputCode').value;
-            if (!code) return alert("Generate code first.");
-            const blob = new Blob([code], {type: "text/plain"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "protected_krovixa.lua";
-            a.click();
-        }
-    </script>
+<script>
+    const skidShadow = `--[[
+███████╗██╗  ██╗██╗██████╗ ██╗██╗    ███████╗██╗  ██╗██╗██████╗ ██████╗ ██╗██╗██╗██╗██╗    
+██╔════╝██║ ██╔╝██║██╔══██╗██║██║    ██╔════╝██║ ██╔╝██║██╔══██╗██╔══██╗██║██║██║██║██║    
+███████╗█████╔╝ ██║██║  ██║██║██║    ███████╗█████╔╝ ██║██║  ██║██║  ██║██║██║██║██║██║    
+╚════██║██╔═██╗ ██║██║  ██║╚═╝╚═╝    ╚════██║██╔═██╗ ██║██║  ██║██║  ██║╚═╝╚═╝╚═╝╚═╝╚═╝    
+███████║██║  ██╗██║██████╔╝██╗██╗    ███████║██║  ██╗██║██████╔╝██████╔╝██╗██╗██╗██╗██╗    
+╚══════╝╚═╝  ╚═╝╚═╝╚═════╝ ╚═╝╚═╝    ╚══════╝╚═╝  ╚═╝╚═╝╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝╚═╝╚═╝    
+]]\n`;
+
+    function hex(s) { return s.split('').map(c => \`\\\\x\${c.charCodeAt(0).toString(16).toUpperCase()}\`).join(''); }
+    function rVar() { return "_" + Math.random().toString(36).substring(2, 12).toUpperCase(); }
+
+    function buildSteroids() {
+        const input = document.getElementById('inputCode').value;
+        if (!input.trim()) return alert("Input is empty.");
+
+        const useAlarm = document.getElementById('chkAlarm').checked;
+        const useGap = document.getElementById('chkGap').checked;
+
+        // Alarm Sub-Routine (Lag + Image Lock)
+        const alarmLogic = useAlarm ? `
+local function _0xALARM()
+    local _s = tick() while tick() - _s < 0.8 do end
+    local g = Instance.new("ScreenGui", game:GetService("CoreGui"))
+    g.IgnoreGuiInset = true
+    local i = Instance.new("ImageLabel", g)
+    i.Size = UDim2.new(1,0,1,0)
+    i.Image = "rbxassetid://97503941984577"
+    i.ZIndex = 9999999
+    game:GetService("StarterGui"):SetCore("SendNotification", {Title="ALARM TRIGGERED", Text="Unauthorized Access.", Duration=5})
+    while true do end
+end
+` : "local function _0xALARM() end";
+
+        const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+        const payload = input.split('').map((c, i) => \`\\\\\${(c.charCodeAt(0) + keys[i % keys.length]) % 256}\`).join('');
+
+        const vS = rVar(), vT = rVar();
+        
+        let engine = `return(function(...) \${alarmLogic} local \${vS}=30;local \${vT}={}while \${vS}~=0 do `;
+        engine += `if \${vS}==30 then \${vT}.d=[[\${payload}]] \${vS}=15 `;
+        engine += `elseif \${vS}==15 then \${vT}.k={\${keys.join(',')}} \${vS}=45 `;
+        engine += `elseif \${vS}==45 then local _b=""for i=1,#\${vT}.d do _b=_b..string.char((\${vT}.d:byte(i)-\${vT}.k[(i-1)%#\${vT}.k+1])%256)end; `;
+        engine += `if script.Name ~= "\${hex("protected_krovixa")}" then _0xALARM() end; `;
+        engine += `local _ok, _r = pcall(function() return loadstring(_b) end) if not _ok or not _r then _0xALARM() end \${vT}.r=_r \${vS}=60 `;
+        engine += `elseif \${vS}==60 then return \${vT}.r(...) else \${vS}=0 end end end)(...)`;
+
+        const gap = useGap ? " ".repeat(10000) + "\\n" : "\\n";
+        document.getElementById('outputCode').value = gap + skidShadow + engine.replace(/\\s+/g, ' ');
+    }
+
+    function downloadScript() {
+        const code = document.getElementById('outputCode').value;
+        if (!code) return alert("Generate code first.");
+        
+        const blob = new Blob([code], { type: "application/octet-stream" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        
+        link.href = url;
+        link.download = "protected_krovixa.lua"; // Pure .lua extension
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        setTimeout(() => URL.revokeObjectURL(url), 100);
+    }
+
+    function copyToClipboard() {
+        const output = document.getElementById('outputCode');
+        output.select();
+        document.execCommand('copy');
+        alert("Copied to clipboard!");
+    }
+</script>
+
 </body>
 </html>
